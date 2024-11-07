@@ -6,11 +6,16 @@ p = str2num(NACA(2))/10;
 t = str2num(NACA(3))/10 + str2num(NACA(4))/100;
 
 c = 1;
+% Clustering
+angles = linspace(0,pi,101);
+x1 = cos(angles);
+%scatter(x_pos, ones(1,50));
+
 x = 0:0.01:c;
 
 % equations
 
-y_t = (t*c/0.2)*((0.2969*sqrt(x/c))-(0.126*(x/c))-(0.3516*((x/c).^2))+0.2843*((x/c).^3))-(0.1036*((x/c).^4));
+y_t = (t*c/0.2)*( (0.2969*sqrt(x/c)) - (0.126*(x/c)) - (0.3516*((x/c).^2)) + (0.2843*((x/c).^3)) - (0.1036*((x/c).^4)) );
 
 
 %y_c1 = @(x) m
@@ -37,22 +42,17 @@ y_u2 =  y_c1 + (y_t.*cos(zeta2));
 y_L2 =  y_c1 - (y_t.*cos(zeta2));
 
 midlimit = find(x==(p*c),1);
-limit = c;
+limit = find(x==c,1);
 
-x_u = [x_u1(1,1:midlimit),x_u2(1,midlimit+1:end)];
-y_u = [y_u1(1,1:midlimit),y_u2(1,midlimit+1:end)];
-x_L = [x_L1(1,1:midlimit),x_L2(1,midlimit+1:end)];
-y_L = [y_L1(1,1:midlimit),y_L2(1,midlimit+1:end)];
+x_u = [x_u1(1,1:midlimit),x_u2(1,midlimit+1:limit)];
+y_u = [y_u1(1,1:midlimit),y_u2(1,midlimit+1:limit)];
+x_L = [x_L1(1,1:midlimit),x_L2(1,midlimit+1:limit)];
+y_L = [y_L1(1,1:midlimit),y_L2(1,midlimit+1:limit)];
 
 hold on;
 plot(x_u,y_u);
 plot(x_L,y_L);
+ylim([-0.2 0.3])
 
-% Clustering
-angles = linspace(0,pi,50);
-x_pos = cos(angles);
-figure();
-hold on;
-scatter(x_pos, ones(1,50));
 
 
