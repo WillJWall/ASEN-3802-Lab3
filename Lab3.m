@@ -28,3 +28,12 @@ zeta2 = @(x) atan(dy_c2dx(x));
 
 x_u = @(x) x - y_t(x)*sin(zeta1);
 
+% Clustering
+angles = linspace(0,pi,50);
+x_pos = cos(angles);
+figure();
+hold on;
+scatter(x_pos, ones(1,50));
+
+
+
