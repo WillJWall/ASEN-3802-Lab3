@@ -49,8 +49,8 @@ function [] = plotAirfoil(NACA)
     % Upper Coordinates
     x_ub =  x - (y_t.*sin(zeta2));
     x_Lb =  x + (y_t.*sin(zeta2));
-    y_ub =  y_c1 + (y_t.*cos(zeta2));
-    y_Lb =  y_c1 - (y_t.*cos(zeta2));
+    y_ub =  y_c2 + (y_t.*cos(zeta2));
+    y_Lb =  y_c2 - (y_t.*cos(zeta2));
     
     midlimit = find(x>(p*c),1);
     limit = find(x==c,1);
