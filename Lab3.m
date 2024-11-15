@@ -1,39 +1,35 @@
 close all; clear; clc;
-NACA = '4415'; % INPUT NUMBER ONLY
+NACA = '0021';
+alpha1 = 10; % AOA [deg]
+%Exp006Data = load("Dataset Reynolds 9E8.csv"); %(section aoa [deg], section C_L)
 
-m = str2num(NACA(1))/100;
-p = str2num(NACA(2))/10;
-t = str2num(NACA(3))/10 + str2num(NACA(4))/100;
+%[x_u,y_u,x_L,y_L] = plotAirfoil(NACA,20);
 
-c = 1;
-x = 0:0.01:c;
+[x_u,y_u,x_L,y_L] = plotAirfoil(NACA,2000);
+x_B = [flip(x_L(2:end)),x_u(1:end)];
+y_B = [flip(y_L(2:end)),y_u(1:end)];
+C_l_true = Vortex_Panel(x_B,y_B,alpha1);
 
-% equations
-
-y_c1 = (2*p-(x/c)).*m.*x/(p^2);
-y_c2 = m.*(c-x).*(1+(x/c)-(2*p)) / ((1-p)^2);
-
-y_t = @(x) (t*c/0.2)*((0.2969*sqrt(x/c))-(0.126*(x/c))-(0.3516*((x/c).^2))+0.2843*((x/c).^3))-(0.1036*((x/c).^4));
-y_t1 = y_t(x);
-
-%y_c1 = @(x) m
-
-dy_c1dx = @(x) 2*m*(c*p-x)/c/(p^2);
-dy_c2dx = @(x) (2*m*(c*p-x)) / (c*((1-p)^2));
+figure(); hold on;
+x_B_new = x_B;
+y_B_new = y_B;
+c = linspace(1,10,length(x_B_new));
+scatter(x_B_new, y_B_new, [], c);
+ylim([-0.2 0.3])
+xlim([-0.001 1.001])
 
 
-zeta1 = @(x) atan(dy_c1dx(x));
-zeta2 = @(x) atan(dy_c2dx(x));
+j = 1;
+for i=4:1:200
+    [x_u,y_u,x_L,y_L] = plotAirfoil(NACA,i);
+    x_B = [flip(x_L(2:end)),x_u(1:end)];
+    y_B = [flip(y_L(2:end)),y_u(1:end)];
+    c_l(i) = Vortex_Panel(x_B,y_B,alpha1);
+    x_loc(i) = i;
+    C_l_goal(i) = 100*abs(c_l(i)-(C_l_true))/C_l_true;
+end
+k = find(C_l_goal(3:end)<1,1);
 
-
-x_u = @(x) x - y_t(x)*sin(zeta1);
-
-% Clustering
-angles = linspace(0,pi,50);
-x_pos = cos(angles);
 figure();
-hold on;
-scatter(x_pos, ones(1,50));
-
-
-
+hold on; grid on;
+plot(x_loc, c_l);
