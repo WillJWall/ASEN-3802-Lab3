@@ -1,15 +1,9 @@
-close all; clear; clc;
-NACA = '4415'; % INPUT NUMBER ONLY
+function [x_u,y_u,x_L,y_L] = plotAirfoil(NACA,panels)
+    % Panels
+    points = (panels+2)/2;
 
-plotAirfoil('4415');
-plotAirfoil('0012');
-plotAirfoil('0021');
-plotAirfoil('2421');
-
-
-function [] = plotAirfoil(NACA)
     % Clustering
-    angles = linspace(0,pi,101);
+    angles = linspace(0,pi,points);
     x = flip((cos(angles)+1)/2);
     
     % NACA Information
@@ -40,13 +34,13 @@ function [] = plotAirfoil(NACA)
     zeta1 = atan(dy_c1dx);
     zeta2 = atan(dy_c2dx);
     
-    % Lower Coordinates
+    % Front Coordinates
     x_ua =  x - (y_t.*sin(zeta1));
     x_La =  x + (y_t.*sin(zeta1));
     y_ua =  y_c1 + (y_t.*cos(zeta1));
     y_La =  y_c1 - (y_t.*cos(zeta1));
     
-    % Upper Coordinates
+    % Back Coordinates
     x_ub =  x - (y_t.*sin(zeta2));
     x_Lb =  x + (y_t.*sin(zeta2));
     y_ub =  y_c2 + (y_t.*cos(zeta2));
@@ -62,14 +56,14 @@ function [] = plotAirfoil(NACA)
     y_L = [y_La(1,1:midlimit),y_Lb(1,midlimit+1:limit)];
     y_camber = [y_c1(1,1:midlimit),y_c2(1,midlimit+1:limit)];
 
-    % Plotting
-    figure('Position', [40 60 700 400]); hold on; grid on;
-    title("Airfoil: NACA " + NACA)
-    xlabel("Distance along Chord");
-    ylabel("Thickness");
-    plot(x_u,y_u,'r.');
-    plot(x_L,y_L,'r.');
-    plot(x, y_camber,'r');
-    ylim([-0.2 0.3])
-    xlim([-0.001 1.001])
+    %Plotting
+    % figure('Position', [40 60 700 400]); hold on; grid on;
+    % title("Airfoil: NACA " + NACA)
+    % xlabel("Distance along Chord");
+    % ylabel("Thickness");
+    % plot(x_u,y_u,'r.');
+    % plot(x_L,y_L,'r.');
+    % plot(x, y_camber,'r');
+    % ylim([-0.2 0.3])
+    % xlim([-0.001 1.001])
 end
