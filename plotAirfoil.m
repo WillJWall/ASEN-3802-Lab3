@@ -1,4 +1,4 @@
-function [x_u,y_u,x_L,y_L] = plotAirfoil(NACA,panels)
+function [a, C_l, x, y_camber,x_u,y_u,x_L,y_L] = plotAirfoil(NACA,panels)
     % Panels
     points = (panels+2)/2;
 
@@ -66,4 +66,33 @@ function [x_u,y_u,x_L,y_L] = plotAirfoil(NACA,panels)
     % plot(x, y_camber,'r');
     % ylim([-0.2 0.3])
     % xlim([-0.001 1.001])
+
+
+     % zero lift angle of attack calculation
+    dy_camber = [dy_c1dx(1,1:midlimit),dy_c2dx(1,midlimit+1:limit)]; 
+    
+    y = linspace(0,pi,length(dy_camber));
+%     figure()
+%     plot(y,dy_camber);
+  
+    intdz = trapz(y,dy_camber.*(cos(y)-1));
+
+    a_L_0_rad = -1/pi * intdz;
+    a_L_0 = a_L_0_rad * 180/pi; % looking for - 2.2
+    disp("Zero Lift Angle of Attack for " + NACA)
+    disp(a_L_0)
+
+    % lift slope plotting
+    a = -5:15;
+    a_rad = a.*pi/180;
+    C_l = 2*pi*a_rad - a_L_0_rad;
+
+    % figure()
+    % plot(a,C_l,LineWidth=2)
+    % yline(0,LineStyle="--")
+    % xline(0)
+    % grid on
+    % title("TAT Predicted Lift Curve for NACA " + NACA)
+    % xlabel("Angle of Attack (deg)")
+    % ylabel("Lift Coefficient")
 end
