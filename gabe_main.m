@@ -7,7 +7,7 @@ plotAirfoil('0021');
 plotAirfoil('2421');
 
 
-function [a_L_0] = plotAirfoil(NACA)
+function [] = plotAirfoil(NACA)
     % Clustering
     angles = linspace(0,pi,101);
     x = flip((cos(angles)+1)/2);
@@ -77,13 +77,27 @@ function [a_L_0] = plotAirfoil(NACA)
     dy_camber = [dy_c1dx(1,1:midlimit),dy_c2dx(1,midlimit+1:limit)]; 
     
     y = linspace(0,pi,length(dy_camber));
-    figure()
-    plot(y,dy_camber);
+%     figure()
+%     plot(y,dy_camber);
   
     intdz = trapz(y,dy_camber.*(cos(y)-1));
 
-    a_L_0 = -1/pi * intdz;
-    a_L_0 = a_L_0 * 180/pi; % looking for - 2.2
+    a_L_0_rad = -1/pi * intdz;
+    a_L_0 = a_L_0_rad * 180/pi; % looking for - 2.2
     disp("Zero Lift Angle of Attack for " + NACA)
     disp(a_L_0)
+
+    % lift slope plotting
+    a = -5:15;
+    a_rad = a.*pi/180;
+    C_l = 2*pi*a_rad - a_L_0_rad;
+
+    figure()
+    plot(a,C_l,LineWidth=2)
+    yline(0,LineStyle="--")
+    xline(0)
+    grid on
+    title("TAT Predicted Lift Curve for NACA " + NACA)
+    xlabel("Angle of Attack (deg)")
+    ylabel("Lift Coefficient")
 end
